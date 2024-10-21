@@ -6,10 +6,11 @@ ACTIONS = {
     input = gets.chomp
 
     yaml_string = File.read('tasks.yml')
-    tasks_array = YAML.load(yaml_string)
+    tasks_array = YAML.load(yaml_string) || []
 
     tasks_array << input
-    write_to_csv(tasks_array)
+    result = YAML.dump(tasks_array)
+    File.write('tasks.yml', result)
   end,
   '2' => -> do
     p 'write a task to remove'
@@ -23,7 +24,8 @@ ACTIONS = {
 
     tasks_array.delete(input)
 
-    write_to_csv(tasks_array)
+    result = YAML.dump(tasks_array)
+    File.write('tasks.yml', result)
   end,
   '3' => -> do
     p "Getting a random item"
@@ -41,9 +43,4 @@ p "3. Get a random item"
 input = gets.chomp
 
 ACTIONS[input].call
-
-def write_to_csv(data)
-  result = YAML.dump(data)
-  File.write('tasks.yml', result)
-end
 
